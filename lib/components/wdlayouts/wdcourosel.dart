@@ -43,7 +43,8 @@ class _WDCourouselImage extends State<WDCourousel> {
               // print(widget.dataSource.toString());
               return InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, '/information');
+                  Navigator.pushNamed(context, '/information',
+                      arguments: {'id': widget.dataSource[index]?.id});
                   // Navigator.push(context,
                   //     MaterialPageRoute(builder: (context) => DetailScreen()));
                 },

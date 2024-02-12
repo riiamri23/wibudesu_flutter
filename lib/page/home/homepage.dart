@@ -25,9 +25,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getTopAiring() async {
-    // _topAiringModel = (await CSAnimeService().getTopAiring());
-
-    // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
     await CSAnimeService().getTopAiring().then((value) {
       _topAiringModel = value;
       _topAiringListModel = _topAiringModel!.results!;

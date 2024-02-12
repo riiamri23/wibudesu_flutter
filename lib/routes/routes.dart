@@ -5,6 +5,7 @@ import 'package:wibudesu2/page/watch/watchpage.dart';
 
 Map<String, WidgetBuilder> router = {
   '/': (BuildContext context) => const HomePage(),
-  '/information': (context) => const InformationPage(),
+  '/information': (context) =>
+      InformationPage(args: ModalRoute.of(context)!.settings.arguments),
   '/watch': (context) => const WatchPage(),
 };
