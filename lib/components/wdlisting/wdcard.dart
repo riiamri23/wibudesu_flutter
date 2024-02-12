@@ -16,7 +16,7 @@ class _WDCardState extends State<WDCard> {
       width: MediaQuery.of(context).size.width / 3,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),

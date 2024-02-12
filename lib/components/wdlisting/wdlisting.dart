@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wibudesu2/components/wdlisting/wdcard.dart';
+import 'package:wibudesu2/components/wdlisting/wdcardheader.dart';
 
 class WDListingCard extends StatefulWidget {
   const WDListingCard({
@@ -8,11 +9,14 @@ class WDListingCard extends StatefulWidget {
     required this.menuName,
     required this.dataSource,
     this.isHorizontal = true,
+    this.showLabel = true,
   }) : super(key: key);
 
   final String menuName;
+  // ignore: prefer_typing_uninitialized_variables
   final dataSource;
   final bool isHorizontal;
+  final bool showLabel;
 
   @override
   State<WDListingCard> createState() => _WDListingCardState();
@@ -28,26 +32,7 @@ class _WDListingCardState extends State<WDListingCard> {
         : Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                // header
-                children: [
-                  IconButton(
-                    icon: SvgPicture.asset(
-                      "assets/icons/menu-svgrepo-com.svg",
-                      width: 20,
-                      height: 20,
-                    ),
-                    onPressed: () {},
-                  ),
-                  Expanded(
-                    child: Text(
-                      widget.menuName,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ],
-              ),
+              WDCardHeader(menuName: widget.menuName),
               const SizedBox(
                 height: 5,
               ),
