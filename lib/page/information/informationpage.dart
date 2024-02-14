@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:wibudesu2/components/generals/wdgridvieweps.dart';
 import 'package:wibudesu2/components/generals/wdlabelinfo.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wibudesu2/components/wdlisting/wdcardheader.dart';
 import 'package:wibudesu2/models/animeinformation.dart';
 import 'package:wibudesu2/repositories/csanime.dart';
-// import 'package:wibudesu2/components/wdlayouts/wdappbar.dart';
 
 class InformationPage extends StatefulWidget {
   const InformationPage({Key? key, this.args}) : super(key: key);
+  // ignore: prefer_typing_uninitialized_variables
   final args;
   @override
   State<InformationPage> createState() => _InformationPageState();
@@ -80,10 +80,13 @@ class _InformationPageState extends State<InformationPage> {
           ),
           Row(
             children: [
-              Text(
-                _animeInformation?.otherName ?? '',
-                maxLines: 2,
-                style: const TextStyle(color: Colors.grey),
+              Flexible(
+                child: Text(
+                  _animeInformation?.otherName ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: const TextStyle(color: Colors.grey),
+                ),
               ),
               const Spacer(),
               Text(
@@ -115,42 +118,20 @@ class _InformationPageState extends State<InformationPage> {
           const SizedBox(
             height: 15,
           ),
-          const Row(
-            children: [
-              WDLabelInfo(labelName: "Action", bgColor: Colors.purple),
-              WDLabelInfo(labelName: "Fantasy", bgColor: Colors.purple),
-              WDLabelInfo(labelName: "Supernatural", bgColor: Colors.purple),
-            ],
+          Wrap(
+            direction: Axis.horizontal,
+            runSpacing: 5,
+            children:
+                List.generate(_animeInformation?.genres?.length ?? 0, (index) {
+              return WDLabelInfo(
+                  labelName: _animeInformation?.genres?[index] ?? '',
+                  bgColor: Colors.purple);
+            }),
           ),
           const WDCardHeader(menuName: "Episode List"),
-          GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              childAspectRatio: MediaQuery.of(context).size.width /
-                  (MediaQuery.of(context).size.height / 4),
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-            ),
-            shrinkWrap: true,
-            // crossAxisCount: 4,
-            // childAspectRatio: 0.5,
-            controller: ScrollController(keepScrollOffset: false),
-            itemCount: 20,
-            itemBuilder: (context, index) {
-              var descInd = 20 - index;
-              return Container(
-                padding: const EdgeInsets.all(15),
-                decoration: const BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                ),
-                child: Text(
-                  "$descInd",
-                  style: const TextStyle(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            },
+          WDGridviewEps(
+            eps: _animeInformation?.episodes,
+            orderList: "Descending",
           )
         ],
       ),
