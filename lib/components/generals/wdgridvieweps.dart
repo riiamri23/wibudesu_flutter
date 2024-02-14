@@ -31,8 +31,8 @@ class _WDGridviewEpsState extends State<WDGridviewEps> {
       controller: ScrollController(keepScrollOffset: false),
       itemCount: epsList?.length,
       itemBuilder: (context, index) {
-        var descInd = epsList?[index].number;
-        return WDEps(text: descInd!.toString());
+        // var descInd = epsList?[index].number;
+        return WDEps(eps: epsList?[index]);
       },
     );
   }

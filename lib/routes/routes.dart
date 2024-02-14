@@ -7,5 +7,6 @@ Map<String, WidgetBuilder> router = {
   '/': (BuildContext context) => const HomePage(),
   '/information': (context) =>
       InformationPage(args: ModalRoute.of(context)!.settings.arguments),
-  '/watch': (context) => const WatchPage(),
+  '/watch': (context) =>
+      WatchPage(args: ModalRoute.of(context)!.settings.arguments),
 };
