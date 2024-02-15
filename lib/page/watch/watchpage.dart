@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:wibudesu2/models/animewatch.dart';
 import 'package:wibudesu2/repositories/csanime.dart';
 
@@ -13,7 +14,7 @@ class WatchPage extends StatefulWidget {
 }
 
 class _WatchPageState extends State<WatchPage> {
-  late VideoPlayerController? _controller = null;
+  late WebViewController? controller = null;
   late AnimeWatch? _animeWatch = null;
 
   @override
@@ -27,50 +28,47 @@ class _WatchPageState extends State<WatchPage> {
     await CSAnimeService().getWatchById(widget.args['id']).then((value) {
       _animeWatch = value;
       if (_animeWatch?.headers?.referer != '') {
+        print(_animeWatch);
         String path = _animeWatch?.headers?.referer ?? '';
-        print(path);
-        var uri = Uri.parse(path); // works correctly; has no percent-encoding
-        _controller = VideoPlayerController.networkUrl(uri);
-        print(_controller);
-        // _controller = VideoPlayerController.networkUrl(
-        //     Uri.parse(_animeWatch?.headers?.referer ?? ''))
-        //   ..initialize().then((_) {
-        //     // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        //     setState(() {});
-        //   });
+
+        controller = WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setBackgroundColor(const Color(0x00000000))
+          ..setNavigationDelegate(
+            NavigationDelegate(
+              onProgress: (int progress) {
+                // Update loading bar.
+                print(progress);
+              },
+              onPageStarted: (String url) {},
+              onPageFinished: (String url) {},
+              onWebResourceError: (WebResourceError error) {
+                print(error.toString());
+              },
+              onNavigationRequest: (NavigationRequest request) {
+                if (request.url.startsWith('https://www.youtube.com/')) {
+                  return NavigationDecision.prevent;
+                }
+                return NavigationDecision.navigate;
+              },
+            ),
+          )
+          // ..loadRequest(Uri.parse('https://flutter.dev'));
+          ..loadRequest(Uri.parse(path));
       }
-      // setState(() {});
+      setState(() {});
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _animeWatch == null && _controller == null
+      body: _animeWatch == null
           ? const Center(
               child: CircularProgressIndicator(),
             )
           : Center(
-              child: _controller!.value.isInitialized
-                  ? AspectRatio(
-                      aspectRatio: _controller!.value.aspectRatio,
-                      child: VideoPlayer(_controller!),
-                    )
-                  : Container(),
-            ),
-      floatingActionButton: _animeWatch == null && _controller == null
-          ? Container()
-          : FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  _controller!.value.isPlaying
-                      ? _controller!.pause()
-                      : _controller!.play();
-                });
-              },
-              child: Icon(
-                _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              ),
+              child: WebViewWidget(controller: controller!),
             ),
     );
   }
@@ -78,6 +76,5 @@ class _WatchPageState extends State<WatchPage> {
   @override
   void dispose() {
     super.dispose();
-    _controller!.dispose();
   }
 }
